@@ -35,6 +35,49 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 }
 ```
 
+## usePagination - this is basically useAsync, but with index and previous/next page support
+```ts
+const usePagination = <T,>(asyncFn: (pageIndex: number) => Promise<T>) => {
+  const [index, setIndex] = useState(0)
+  const [status, setStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle')
+  const [data, setData] = useState<T | undefined>(undefined)
+  const [error, setError] = useState<Error | null>(null)
+
+  const hasPreviousPage = index > 0
+  const hasNextPage = index > 0 && (data !== undefined || data !== null) 
+  const isLoading = status === 'pending'
+
+  const execute = useCallback(async (idx: number) => {
+    setStatus('pending')
+    setData(undefined)
+    setError(null)
+
+    try {
+      const response = await asyncFn(idx)
+      setData(response)
+      setStatus('success')
+    } catch (err) {
+      setError(err)
+      setStatus('error')
+    }
+    
+  }, [asyncFn, index])
+
+  useEffect(() => {
+    execute(index)
+  }, [execute, index])
+
+  const fetchNextPage = () => {
+    setIndex(index + 1)
+  }
+
+  const fetchPreviousPage = () => {
+    setIndex(index - 1)
+  }
+
+  return { data, error, status, fetchNextPage, fetchPreviousPage, hasPreviousPage, hasNextPage, isLoading }
+}
+```
 
 ## usePagination (with react-query)
 
