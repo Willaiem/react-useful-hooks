@@ -35,7 +35,8 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 }
 ```
 
-## usePagination - this is basically useAsync, but with index and previous/next page support
+## usePagination (vanilla)
+This is basically useAsync, but with index and previous/next page support.
 ```ts
 const usePagination = <T,>(asyncFn: (pageIndex: number) => Promise<T>) => {
   const [index, setIndex] = useState(0)
