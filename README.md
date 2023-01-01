@@ -64,3 +64,6 @@ const usePagination = <T,>(key: string, asyncFn: (pageIndex: number) => Promise<
   return { data: currentData, error, isLoading, fetchNextPage, fetchPreviousPage, hasNextPage, hasPreviousPage }
 }
 ```
+
+Short explanation:
+- I assume that ``lastPage`` will be either ``undefined`` or ``null`` when we will be at the last page.
