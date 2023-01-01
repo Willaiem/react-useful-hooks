@@ -29,7 +29,7 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 
   useEffect(() => {
     execute()
-  }, [])
+  }, [execute])
 
   return { status, data, error, isLoading }
 }
