@@ -85,7 +85,7 @@ const usePagination = <T,>(asyncFn: (pageIndex: number) => Promise<T>) => {
 ```ts
 const usePagination = <T,>(key: string, asyncFn: (pageIndex: number) => Promise<T>) => {
   const [index, setIndex] = useState(0)
-  const { data, error, isLoading, hasNextPage, hasPreviousPage, fetchNextPage: fetchNext, fetchPreviousPage: fetchPrevious }
+  const { data, isFetching, isFetchingNextPage, isFetchingPreviousPage, hasNextPage, hasPreviousPage, fetchNextPage: fetchNext, fetchPreviousPage: fetchPrevious }
     = useInfiniteQuery({
       queryKey: key,
       queryFn: ({ pageParam }) => asyncFn(pageParam || 0),
@@ -105,7 +105,9 @@ const usePagination = <T,>(key: string, asyncFn: (pageIndex: number) => Promise<
     fetchPrevious({ pageParam: index - 1 })
   }
 
-  return { data: currentData, error, isLoading, fetchNextPage, fetchPreviousPage, hasNextPage, hasPreviousPage }
+  const isLoading = isFetching && (isFetchingNextPage || isFetchingPreviousPage)
+
+  return { data: currentData, isLoading, fetchNextPage, fetchPreviousPage, hasNextPage, hasPreviousPage }
 }
 ```
 
