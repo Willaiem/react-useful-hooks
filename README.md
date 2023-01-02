@@ -1,5 +1,6 @@
 # react-useful-hooks
 Some custom hooks I made.
+I want to have some cool hooks in one place to find them easy.
 
 ## useAsync
 
