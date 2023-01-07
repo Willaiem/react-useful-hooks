@@ -2,7 +2,7 @@
 Some custom hooks I made.
 I want to have some cool hooks in one place to find them easy.
 
-## useAsync (vanilla)
+## useAsync (vanilla) - based on react-query's useQuery hook.
 
 ```ts
 const useAsync = <T,>(asyncFn: () => Promise<T>) => {
@@ -35,8 +35,6 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
   return { status, data, error, isLoading }
 }
 ```
-
-## useAsync (react-query) - just use useQuery :)
 
 ## usePagination (vanilla)
 This is basically useAsync, but with index and previous/next page support.
