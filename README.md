@@ -37,6 +37,52 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 }
 ```
 
+### Alternative - useAsync (with Union State Machine pattern)
+This makes the hook easier to read and more typesafe. 
+
+```ts
+type UseAsync<T> = 
+  | {
+    type: 'init';
+  }
+  | {
+    type: 'pending'
+  }
+  | {
+    type: 'resolved',
+    data: T
+  }
+  | {
+    type: 'rejected'
+    error: unknown
+  }
+
+const useAsync = <T,>(asyncFn: () => Promise<T>) => {
+  const [state, setAsyncState] = useState<UseAsync<T>>({
+    type: 'init'
+  });
+
+  const isLoading = state.type === 'pending';
+
+  const execute = useCallback(async () => {
+    setAsyncState({ type: 'pending' });
+
+    try {
+      const response = await asyncFn();
+      setAsyncState({ type: 'resolved', data: response });
+    } catch (err) {
+      setAsyncState({ type: 'rejected', error: err });
+    }
+  }, [asyncFn]);
+
+  useEffect(() => {
+    execute();
+  }, [execute]);
+
+  return { state, isLoading };
+};
+```
+
 ## usePagination (vanilla)
 This is basically useAsync, but with index and previous/next page support.
 ```ts
