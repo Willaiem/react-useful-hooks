@@ -49,7 +49,7 @@ type UseAsync<T> =
     type: 'pending'
   }
   | {
-    type: 'resolved',
+    type: 'fulfilled',
     data: T
   }
   | {
@@ -69,7 +69,7 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 
     try {
       const response = await asyncFn();
-      setAsyncState({ type: 'resolved', data: response });
+      setAsyncState({ type: 'fulfilled', data: response });
     } catch (err) {
       setAsyncState({ type: 'rejected', error: err });
     }
