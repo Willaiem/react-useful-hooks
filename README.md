@@ -1,4 +1,5 @@
 # react-useful-hooks
+
 Some custom hooks I made.
 I want to have some cool hooks in one place to find them easy.
 
@@ -63,8 +64,10 @@ const Todo = () => {
   )
 }
 ```
+
 ### Alternative - useAsync (with Union State Machine pattern)
-This makes the hook easier to read and more typesafe. 
+
+This makes the hook easier to read and more typesafe.
 
 ```ts
 type UseAsync<T> = 
@@ -136,6 +139,7 @@ const User = () => {
 ```
 
 ## usePagination (vanilla)
+
 This is basically useAsync, but with index and previous/next page support.
 It also support the persisting the data between pages, just like in TanStack Query.
 
@@ -279,4 +283,5 @@ const usePagination = <T,>(key: string, asyncFn: (pageIndex: number) => Promise<
 ```
 
 Short explanation:
+
 - I assume that ``lastPage`` will be either ``undefined`` or ``null`` when we will be at the last page. You can customize it to your needs.
