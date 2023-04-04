@@ -201,6 +201,49 @@ const usePagination = <T,>(
   }
 }
 ```
+
+Usage:
+
+```ts
+type Comment = {
+  postId: number
+  id: number
+  name: string
+}
+
+const fetchComments = (index: number) =>
+  fetch(`https://jsonplaceholder.typicode.com/comments?postId=${index}`).then(
+    (response) => response.json() as Promise<Comment[]>
+  )
+
+export const Comments = () => {
+  const {
+    data: comments,
+    fetchPreviousPage,
+    fetchNextPage,
+    hasNextPage,
+    hasPreviousPage
+  } = usePagination(fetchComments, {
+    initialIndex: 1,
+    persistDataBetweenPages: true
+  })
+
+  return (
+    <div>
+      {!comments && <p>Loading...</p>}
+      {comments && comments.map((comment) => (
+        <div key={comment.id}>
+          <h2>{comment.name}</h2>
+          <p>Post id: {comment.postId}</p>
+        </div>
+      ))}
+
+      <div>
+        <button onClick={fetchPreviousPage} disabled={!hasPreviousPage}>Previous</button>
+        <button onClick={fetchNextPage} disabled={!hasNextPage}>Next</button>
+      </div>
+    </div>
+  );
 }
 ```
 
