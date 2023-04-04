@@ -113,15 +113,15 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 Usage:
 
 ```ts
-type TUser = {
-  name: string
-  age: number
+type TTodo = {
+  userId: number
+  title: string
 }
 
-const fetchUser = () => fetch('https://user.example').then(response => response.json() as Promise<TUser>)
+const fetchTodo = () => fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json() as Promise<TTodo>)
 
-const User = () => {
-  const state = useAsync(fetchUser)
+const Todo = () => {
+  const state = useAsync(fetchTodo)
 
   const isLoading = state.type !== 'fulfilled'
 
@@ -131,8 +131,8 @@ const User = () => {
 
   return (
     <div>
-      <h1>{state.data.name}</h1>
-      <p>Age: {state.data.age}</p>
+        <h1>{todo.title}</h1>
+        <p>User id: {todo.userId}</p>
     </div>
   )
 }
