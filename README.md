@@ -5,7 +5,7 @@ I want to have some cool hooks in one place to find them easy.
 
 ## useAsync (vanilla)
 
-<p>Based on TanStack Query's useQuery hook.
+<p>Based on TanStack Query's useQuery hook.</p>
 
 ```ts
 const useAsync = <T,>(asyncFn: () => Promise<T>) => {
