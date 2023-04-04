@@ -137,6 +137,8 @@ const User = () => {
 
 ## usePagination (vanilla)
 This is basically useAsync, but with index and previous/next page support.
+It also support the persisting the data between pages, just like in TanStack Query.
+
 ```ts
 const usePagination = <T,>(
   asyncFn: (pageIndex: number) => Promise<T>,
