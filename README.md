@@ -2,8 +2,9 @@
 Some custom hooks I made.
 I want to have some cool hooks in one place to find them easy.
 
-## useAsync (vanilla) 
-<p>Based on react-query's useQuery hook.
+## useAsync (vanilla)
+
+<p>Based on TanStack Query's useQuery hook.
 
 ```ts
 const useAsync = <T,>(asyncFn: () => Promise<T>) => {
