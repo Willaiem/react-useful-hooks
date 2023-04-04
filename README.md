@@ -38,6 +38,31 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 }
 ```
 
+Usage:
+
+```ts
+type TTodo = {
+  userId: number
+  title: string
+}
+
+const fetchTodo = () => fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json() as Promise<TTodo>)
+
+const Todo = () => {
+  const {data: todo, isLoading } = useAsync(fetchTodo)
+
+  if (isLoading || !todo) {
+    return <p>Loading...</p>
+  }
+
+  return (
+    <div>
+        <h1>{todo.title}</h1>
+        <p>User id: {todo.userId}</p>
+    </div>
+  )
+}
+```
 ### Alternative - useAsync (with Union State Machine pattern)
 This makes the hook easier to read and more typesafe. 
 
