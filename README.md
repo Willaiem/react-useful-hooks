@@ -88,8 +88,6 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
     type: 'init'
   });
 
-  const isLoading = state.type === 'pending';
-
   const execute = useCallback(async () => {
     setAsyncState({ type: 'pending' });
 
@@ -105,7 +103,7 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
     execute();
   }, [execute]);
 
-  return { state, isLoading };
+  return state
 };
 ```
 
