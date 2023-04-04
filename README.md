@@ -109,6 +109,34 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
 };
 ```
 
+Usage:
+
+```ts
+type TUser = {
+  name: string
+  age: number
+}
+
+const fetchUser = () => fetch('https://user.example').then(response => response.json() as Promise<TUser>)
+
+const User = () => {
+  const state = useAsync(fetchUser)
+
+  const isLoading = state.type !== 'fulfilled'
+
+  if (isLoading) {
+    return <p>Loading...</p>
+  }
+
+  return (
+    <div>
+      <h1>{state.data.name}</h1>
+      <p>Age: {state.data.age}</p>
+    </div>
+  )
+}
+```
+
 ## usePagination (vanilla)
 This is basically useAsync, but with index and previous/next page support.
 ```ts
