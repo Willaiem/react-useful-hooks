@@ -47,10 +47,10 @@ type TTodo = {
   title: string
 }
 
-const fetchTodo = () => fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json() as Promise<TTodo>)
+const fetchTodo = () => fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json())
 
 const Todo = () => {
-  const {data: todo, isLoading } = useAsync(fetchTodo)
+  const {data: todo, isLoading } = useAsync<TTodo>(fetchTodo)
 
   if (isLoading || !todo) {
     return <p>Loading...</p>
@@ -118,10 +118,10 @@ type TTodo = {
   title: string
 }
 
-const fetchTodo = () => fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json() as Promise<TTodo>)
+const fetchTodo = () => fetch('https://jsonplaceholder.typicode.com/todos/1').then(response => response.json())
 
 const Todo = () => {
-  const state = useAsync(fetchTodo)
+  const state = useAsync<TTodo>(fetchTodo)
 
   const isLoading = state.type !== 'fulfilled'
 
@@ -217,7 +217,7 @@ type Comment = {
 
 const fetchComments = (index: number) =>
   fetch(`https://jsonplaceholder.typicode.com/comments?postId=${index}`).then(
-    (response) => response.json() as Promise<Comment[]>
+    (response) => response.json()
   )
 
 export const Comments = () => {
@@ -227,7 +227,7 @@ export const Comments = () => {
     fetchNextPage,
     hasNextPage,
     hasPreviousPage
-  } = usePagination(fetchComments, {
+  } = usePagination<Comment[]>(fetchComments, {
     initialIndex: 1,
     persistDataBetweenPages: true
   })
