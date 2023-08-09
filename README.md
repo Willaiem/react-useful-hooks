@@ -380,11 +380,11 @@ import { useAsync } from './useAsync'
 const PhotosList = () => {
   const {data: photos }= useAsync<Photo[]>(() => getPhotos());
 
-  const ref = useRef<ElementRef<'div'>>(null);
+  const containerRef = useRef<ElementRef<'div'>>(null);
 
   const virtual = useVirtual({
     count: photos?.length ?? 0,
-    getScrollElement: () => ref.current,
+    getScrollElement: () => containerRef.current,
     estimateSize: () => 245
   })
 
@@ -396,7 +396,7 @@ const PhotosList = () => {
     <div>
       <h1>Virtual</h1>
       <div
-        ref={ref}
+        ref={containerRef}
         style={{
           height: document.documentElement.clientHeight,
           overflow: 'auto', // Make it scroll!
