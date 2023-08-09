@@ -5,7 +5,7 @@ I want to have some cool hooks in one place to find them easy.
 
 ## useAsync (vanilla)
 
-<p>Based on TanStack Query's useQuery hook.</p>
+<p>Based on [TanStack Query's useQuery](https://tanstack.com/query/v4/docs/react/guides/queries) hook.</p>
 transformToError: https://gist.github.com/Willaiem/4015d7ef8dce550be6863f203c29036f
 
 ```ts
