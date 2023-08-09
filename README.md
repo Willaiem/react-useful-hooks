@@ -285,3 +285,151 @@ const usePagination = <T,>(key: string, asyncFn: (pageIndex: number) => Promise<
 Short explanation:
 
 - I assume that ``lastPage`` will be either ``undefined`` or ``null`` when we will be at the last page. You can customize it to your needs.
+
+## useVirtual (for [list virtualization](https://www.patterns.dev/posts/virtual-lists))
+Based on [TanStack's React Virtual](https://tanstack.com/virtual/v3).
+
+```ts
+const getThrottle = (callback: () => void, ms: number) => {
+  let isThrottled = false;
+
+  return () => {
+    if (isThrottled) return;
+
+    isThrottled = true;
+    callback();
+
+    setTimeout(() => {
+      isThrottled = false;
+    }, ms);
+  }
+}
+
+const useThrottledForceRender = () => {
+  const forceRerender = useState({})[1]
+
+  const RERENDER_DELAY_MS = 20; // you can play with this value to see how it affects the performance
+  const throttleRerender = getThrottle(() => {
+    forceRerender({})
+  }, RERENDER_DELAY_MS)
+
+  return throttleRerender
+}
+
+export const useVirtual = ({ count, getScrollElement, estimateSize }: {
+  count: number
+  getScrollElement: () => HTMLElement | null | undefined
+  estimateSize: () => number,
+}) => {
+  const BUFFOR_SIZE = 2 // for elements that are not visible but are close to the visible area
+
+  const forceRerender = useThrottledForceRender()
+
+  const getTotalSize = () => count * estimateSize()
+
+  const getVirtualItems = () => {
+    const scrollElement = getScrollElement();
+    if (!scrollElement) return [];
+
+    const scrollTop = scrollElement.scrollTop;
+    const scrollBottom = scrollTop + scrollElement.clientHeight;
+
+    const startIndex = Math.floor(scrollTop / estimateSize());
+    const endIndex = Math.ceil(scrollBottom / estimateSize());
+
+    const size = estimateSize();
+
+    const elementsToRender = (endIndex - startIndex) + BUFFOR_SIZE;
+
+    return Array(elementsToRender)
+      .fill(0)
+      .map((_, idx) => ({
+        index: startIndex + idx,
+        start: size * (startIndex + idx),
+        end: size * (startIndex + idx + 1),
+        size
+      }));
+  }
+
+  useEffect(() => {
+    const scrollElement = getScrollElement();
+    if (!scrollElement) return;
+
+    const handleScroll = () => {
+      forceRerender()
+    }
+
+    scrollElement.addEventListener('scroll', handleScroll);
+    return () => {
+      scrollElement.removeEventListener('scroll', handleScroll);
+    }
+  }, [])
+
+  return {
+    getTotalSize,
+    getVirtualItems
+  }
+}
+```
+
+Usage (taken from the [React Virtual's docs](https://tanstack.com/virtual/v3/docs/guide/introduction)):
+```ts
+import { useVirtual } from './useVirtual'
+import { useAsync } from './useAsync'
+
+const PhotosList = () => {
+  const {data: photos }= useAsync<Photo[]>(() => getPhotos());
+
+  const ref = useRef<ElementRef<'div'>>(null);
+
+  const virtual = useVirtual({
+    count: photos?.length ?? 0,
+    getScrollElement: () => ref.current,
+    estimateSize: () => 245
+  })
+
+  if (!photos) {
+    return <div>Loading...</div>
+  }
+
+  return (
+    <div>
+      <h1>Virtual</h1>
+      <div
+        ref={ref}
+        style={{
+          height: document.documentElement.clientHeight,
+          overflow: 'auto', // Make it scroll!
+        }}
+      >
+        {/* The large inner element to hold all of the items */}
+        <div
+          style={{
+            height: `${virtual.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative',
+          }}
+        >
+          {/* Only the visible items in the virtualizer, manually positioned to be in view */}
+          {virtual.getVirtualItems().map((virtualItem) => (
+            <div
+              key={virtualItem.index}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: `${virtualItem.size}px`,
+                transform: `translateY(${virtualItem.start}px)`,
+              }}
+            >
+              <p>{photos[virtualItem.index].title}</p>
+              <img src={photos[virtualItem.index].thumbnailUrl} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+```
