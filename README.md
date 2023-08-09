@@ -377,6 +377,12 @@ Usage (taken from the [React Virtual's docs](https://tanstack.com/virtual/v3/doc
 import { useVirtual } from './useVirtual'
 import { useAsync } from './useAsync'
 
+const getPhotos = async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/photos");
+  const photos = await response.json()
+  return photos;
+};
+
 const PhotosList = () => {
   const {data: photos }= useAsync<Photo[]>(() => getPhotos());
 
