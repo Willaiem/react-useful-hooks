@@ -6,8 +6,11 @@ I want to have some cool hooks in one place to find them easy.
 ## useAsync (vanilla)
 
 <p>Based on TanStack Query's useQuery hook.</p>
+transformToError: https://gist.github.com/Willaiem/4015d7ef8dce550be6863f203c29036f
 
 ```ts
+import { transformToError } from '../utils/transformToError'
+
 const useAsync = <T,>(asyncFn: () => Promise<T>) => {
   const [status, setStatus] = useState<'idle' | 'pending' | 'success' | 'error'>('idle')
   const [data, setData] = useState<T | undefined>(undefined)
@@ -24,7 +27,8 @@ const useAsync = <T,>(asyncFn: () => Promise<T>) => {
       const response = await asyncFn()
       setData(response)
       setStatus('success')
-    } catch (err) {
+    } catch (e) {
+      const err = transformToError(e)
       setError(err)
       setStatus('error')
     }
