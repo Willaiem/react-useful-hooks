@@ -339,10 +339,10 @@ export const useVirtual = ({ count, getScrollElement, estimateSize }: {
     const scrollTop = scrollElement.scrollTop;
     const scrollBottom = scrollTop + scrollElement.clientHeight;
 
-    const startIndex = Math.floor(scrollTop / estimateSize());
-    const endIndex = Math.ceil(scrollBottom / estimateSize());
-
     const size = estimateSize();
+
+    const startIndex = Math.floor(scrollTop / size);
+    const endIndex = Math.ceil(scrollBottom / size);
 
     const elementsToRender = (endIndex - startIndex) + BUFFOR_SIZE;
 
